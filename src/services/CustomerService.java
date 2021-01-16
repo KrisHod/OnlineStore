@@ -30,7 +30,7 @@ public class CustomerService {
         return idListOfFemalePurchases;
     }
 
-    public int getIdOfTheMostPopularGood() {
+    public int getIdOfTheMostPopularGoods() {
         List<Integer> idListOfFemalePurchases = getIdListOfFemalePurchases();
         if (idListOfFemalePurchases == null) {
             return 0;
@@ -56,5 +56,15 @@ public class CustomerService {
         }
 
         return count > maxCount ? idListOfFemalePurchases.get(idListOfFemalePurchases.size() - 1) : popular;
+    }
+
+    public String getTitleOfGoodsById (){
+        int idOfTheMostPopularGoods = getIdOfTheMostPopularGoods();
+        for (Item item: Item.getItemList()) {
+            if (item.getId() == idOfTheMostPopularGoods){
+                return item.getTitle();
+            }
+        }
+        return null;
     }
 }
