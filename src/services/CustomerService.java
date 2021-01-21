@@ -6,11 +6,13 @@ import entities.Gender;
 import java.util.ArrayList;
 import java.util.List;
 
+import static entities.Customer.getCustomerList;
+
 public class CustomerService {
 
     public List<Customer> getListOfFemaleCustomers() {
         List<Customer> listOfFemaleCustomers = new ArrayList<>();
-        for (Customer cus : Customer.getCustomerList()) {
+        for (Customer cus : getCustomerList()) {
             if (cus.getGender().equals(Gender.FEMALE)) {
                 listOfFemaleCustomers.add(cus);
             }

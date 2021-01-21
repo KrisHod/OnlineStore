@@ -1,6 +1,8 @@
 package entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Item {
@@ -16,6 +18,7 @@ public class Item {
         this.code = code;
         this.producer = producer;
         this.dateOfLastUpdate = dateOfLastUpdate;
+        getItemList().add(this);
     }
 
     public int getId() {
@@ -80,5 +83,18 @@ public class Item {
                 ", producer='" + producer + '\'' +
                 ", dateOfLastUpdate=" + dateOfLastUpdate +
                 '}';
+    }
+
+    /**
+     * this part of code will soon be replaced in DB class
+     */
+    private static List<Item> itemList = new ArrayList<>();
+
+    public static List<Item> getItemList() {
+        return itemList;
+    }
+
+    public static void setItemList(List<Item> itemList) {
+        Item.itemList = itemList;
     }
 }

@@ -1,19 +1,21 @@
 package entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class Customer {
     private String name;
     private LocalDate doB;
     private String address;
-    private char gender;
+    private Gender gender;
     private String phoneNumber;
     private int [] lastPurchases;
     private LocalDate dateOfLastPurchase;
 
-    public Customer(String name, LocalDate doB, String address, char gender,
+    public Customer(String name, LocalDate doB, String address, Gender gender,
                     String phoneNumber, int[] lastPurchases, LocalDate dateOfLastPurchase) {
         this.name = name;
         this.doB = doB;
@@ -22,6 +24,18 @@ public class Customer {
         this.phoneNumber = phoneNumber;
         this.lastPurchases = lastPurchases;
         this.dateOfLastPurchase = dateOfLastPurchase;
+        getCustomerList().add(this);
+    }
+
+    public Customer(String name, LocalDate doB, String address, Gender gender,
+                    int[] lastPurchases, LocalDate dateOfLastPurchase) {
+        this.name = name;
+        this.doB = doB;
+        this.address = address;
+        this.gender = gender;
+        this.lastPurchases = lastPurchases;
+        this.dateOfLastPurchase = dateOfLastPurchase;
+        getCustomerList().add(this);
     }
 
     public String getName() {
@@ -48,11 +62,11 @@ public class Customer {
         this.address = address;
     }
 
-    public char getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
@@ -106,5 +120,18 @@ public class Customer {
                 ", lastPurchases=" + Arrays.toString(lastPurchases) +
                 ", dateOfLastPurchase=" + dateOfLastPurchase +
                 '}';
+    }
+
+    /**
+     * this part of code will soon be replaced in DB class
+     */
+    private static List<Customer> customerList = new ArrayList<>();
+
+    public static List<Customer> getCustomerList() {
+        return customerList;
+    }
+
+    public static void setCustomerList(List<Customer> customerList) {
+        Customer.customerList = customerList;
     }
 }
