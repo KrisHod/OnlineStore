@@ -12,28 +12,26 @@ public class Customer {
     private String address;
     private Gender gender;
     private String phoneNumber;
-    private int [] lastPurchases;
     private LocalDate dateOfLastPurchase;
+    private List <Order> orderList= new ArrayList<>();
 
     public Customer(String name, LocalDate doB, String address, Gender gender,
-                    String phoneNumber, int[] lastPurchases, LocalDate dateOfLastPurchase) {
+                    String phoneNumber, LocalDate dateOfLastPurchase) {
         this.name = name;
         this.doB = doB;
         this.address = address;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
-        this.lastPurchases = lastPurchases;
         this.dateOfLastPurchase = dateOfLastPurchase;
         getCustomerList().add(this);
     }
 
     public Customer(String name, LocalDate doB, String address, Gender gender,
-                    int[] lastPurchases, LocalDate dateOfLastPurchase) {
+                    LocalDate dateOfLastPurchase) {
         this.name = name;
         this.doB = doB;
         this.address = address;
         this.gender = gender;
-        this.lastPurchases = lastPurchases;
         this.dateOfLastPurchase = dateOfLastPurchase;
         getCustomerList().add(this);
     }
@@ -78,12 +76,12 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
-    public int[] getLastPurchases() {
-        return lastPurchases;
+    public List<Order> getOrderList() {
+        return orderList;
     }
 
-    public void setLastPurchases(int[] lastPurchases) {
-        this.lastPurchases = lastPurchases;
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 
     public LocalDate getDateOfLastPurchase() {
@@ -99,14 +97,12 @@ public class Customer {
         if (this == o) return true;
         if (!(o instanceof Customer)) return false;
         Customer customer = (Customer) o;
-        return getGender() == customer.getGender() && Objects.equals(getName(), customer.getName()) && Objects.equals(getDoB(), customer.getDoB()) && Objects.equals(getAddress(), customer.getAddress()) && Objects.equals(getPhoneNumber(), customer.getPhoneNumber()) && Arrays.equals(getLastPurchases(), customer.getLastPurchases()) && Objects.equals(getDateOfLastPurchase(), customer.getDateOfLastPurchase());
+        return Objects.equals(getName(), customer.getName()) && Objects.equals(getDoB(), customer.getDoB()) && Objects.equals(getAddress(), customer.getAddress()) && getGender() == customer.getGender() && Objects.equals(getPhoneNumber(), customer.getPhoneNumber()) && Objects.equals(getDateOfLastPurchase(), customer.getDateOfLastPurchase()) && Objects.equals(getOrderList(), customer.getOrderList());
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getName(), getDoB(), getAddress(), getGender(), getPhoneNumber(), getDateOfLastPurchase());
-        result = 31 * result + Arrays.hashCode(getLastPurchases());
-        return result;
+        return Objects.hash(getName(), getDoB(), getAddress(), getGender(), getPhoneNumber(), getDateOfLastPurchase(), getOrderList());
     }
 
     @Override
@@ -117,7 +113,6 @@ public class Customer {
                 ", address='" + address + '\'' +
                 ", gender=" + gender +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", lastPurchases=" + Arrays.toString(lastPurchases) +
                 ", dateOfLastPurchase=" + dateOfLastPurchase +
                 '}';
     }
