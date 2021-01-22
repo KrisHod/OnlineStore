@@ -50,11 +50,11 @@ public class ItemService {
     }
 
     //  the most popular goods during a particular weekend (passed in as a param)
-    public List<Integer> getIdListOfPurchasesSoldOnParticularPeriod(LocalDate startDate, LocalDate endDate) {
+    public List<Integer> getPurchasesBetween(LocalDate start, LocalDate end) {
         List<Integer> idListOfPurchases = new ArrayList<>();
         for (Customer cus : getCustomerList()) {
-            if (cus.getDateOfLastPurchase().equals(startDate) || cus.getDateOfLastPurchase().equals(endDate) ||
-                    (cus.getDateOfLastPurchase().isAfter(startDate) && cus.getDateOfLastPurchase().isBefore(startDate))) {
+            if (cus.getDateOfLastPurchase().equals(start) || cus.getDateOfLastPurchase().equals(end) ||
+                    (cus.getDateOfLastPurchase().isAfter(start) && cus.getDateOfLastPurchase().isBefore(start))) {
                 for (int id : cus.getLastPurchases()) {
                     idListOfPurchases.add(id);
                 }
