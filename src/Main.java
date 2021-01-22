@@ -32,7 +32,7 @@ public class Main {
 
         System.out.println("The most popular goods among women is " + itemService.getTitleOfGoodsById(itemService.getIdOfTheMostPopularGoods(customerService.getIdListOfPurchasesByGender(Gender.FEMALE))));
         System.out.println("The most popular goods during a particular weekend is " + itemService.getTitleOfGoodsById
-                (itemService.getIdOfTheMostPopularGoods(itemService.getIdListOfPurchasesSoldOnParticularPeriod
+                (itemService.getIdOfTheMostPopularGoods(itemService.getPurchasesBetween
                         (LocalDate.of(2017, 6, 1), LocalDate.of(2017, 6, 2)))));
     }
 }
