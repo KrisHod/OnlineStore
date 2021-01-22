@@ -30,7 +30,7 @@ public class Main {
         CustomerService customerService = new CustomerService();
         ItemService itemService = new ItemService();
 
-        System.out.println("The most popular goods among women is " + itemService.getTitleOfGoodsById(itemService.getIdOfTheMostPopularGoods(customerService.getIdListOfFemalePurchases())));
+        System.out.println("The most popular goods among women is " + itemService.getTitleOfGoodsById(itemService.getIdOfTheMostPopularGoods(customerService.getIdListOfPurchasesByGender(Gender.FEMALE))));
         System.out.println("The most popular goods during a particular weekend is " + itemService.getTitleOfGoodsById
                 (itemService.getIdOfTheMostPopularGoods(itemService.getIdListOfPurchasesSoldOnParticularPeriod
                         (LocalDate.of(2017, 6, 1), LocalDate.of(2017, 6, 2)))));
