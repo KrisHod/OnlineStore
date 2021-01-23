@@ -10,8 +10,8 @@ import java.time.format.DateTimeParseException;
 public class ItemValidation {
     //id;title;code;producer;dateOfLastUpdate
 
-    public boolean isValidId(int id) {
-        if (id < 0) {
+    public boolean isValidId(String id) {
+        if (!id.matches("^\\d+$")) {
             try {
                 throw new FailedValidationException("Invalid Id");
             } catch (FailedValidationException e) {
