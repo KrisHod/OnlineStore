@@ -1,5 +1,8 @@
+package validation;
+
 import exceptions.FailedValidationException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -63,11 +66,11 @@ public class ItemValidation {
         LocalDateTime ldt = null;
 
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy h:mm:ss");
-            ldt = LocalDateTime.parse(date);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        ldt = LocalDateTime.parse(date, formatter);
             String res = ldt.format(formatter);
 
-            if (!(res.equals(date))) {
+            if (!res.equals(date)) {
                 try {
                     throw new FailedValidationException("Invalid format of date");
                 } catch (FailedValidationException e) {
@@ -76,7 +79,7 @@ public class ItemValidation {
                 }
             }
         } catch (DateTimeParseException e) {
-            e.printStackTrace();
+           e.printStackTrace();
             return false;
         }
         return true;
