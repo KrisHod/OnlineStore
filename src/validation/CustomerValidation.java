@@ -30,7 +30,7 @@ public class CustomerValidation {
     }
 
     public boolean isValidPhoneNumber (String number){
-        if (number.matches("^[+]*[(]{0,1}[0-9]{1,4}[)]?[-\s\./0-9]*$")) {
+        if (number.matches("^((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$")) {
             return true;
         } else {
             try {
