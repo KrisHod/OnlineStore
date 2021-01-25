@@ -8,12 +8,27 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class ItemValidation {
-    //id;title;code;producer;dateOfLastUpdate
 
-    public boolean isValidId(String id) {
-        if (!id.matches("^\\d+$")) {
+    public boolean isValidNumericDataInString(String num) {
+        // check if string contains only positive digitals
+        if (!num.matches("^\\d+$")) {
             try {
-                throw new FailedValidationException("Invalid Id");
+                throw new FailedValidationException("Invalid input. It should contains only positive digitals");
+            } catch (FailedValidationException e) {
+                e.printStackTrace();
+                return false;
+
+
+            }
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isValidStringLength(String str, int length) {
+        if (str.length() > length) {
+            try {
+                throw new FailedValidationException("Length of string should be less than" + length + " character");
             } catch (FailedValidationException e) {
                 e.printStackTrace();
                 return false;
@@ -23,52 +38,12 @@ public class ItemValidation {
         }
     }
 
-    public boolean isValidTitle(String title) {
-        if (title.length() > 30) {
-            try {
-                throw new FailedValidationException("Title of item should contains less than 30 character");
-            } catch (FailedValidationException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
-
-    public boolean isValidCode(int code) {
-        if (code < 0) {
-            try {
-                throw new FailedValidationException("Invalid code");
-            } catch (FailedValidationException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
-
-    public boolean isValidProducer(String producer) {
-        if (producer.length() > 50) {
-            try {
-                throw new FailedValidationException("Title of producer should contains less than 50 character");
-            } catch (FailedValidationException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
-
-    public boolean isValidDateFormat(String date) {
-        LocalDateTime ldt = null;
+    public boolean isValidDateFormat(String date, DateTimeFormatter formatter) {
+        LocalDate ld = null;
 
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        ldt = LocalDateTime.parse(date, formatter);
-            String res = ldt.format(formatter);
+            ld = LocalDate.parse(date, formatter);
+            String res = ld.format(formatter);
 
             if (!res.equals(date)) {
                 try {
@@ -79,7 +54,29 @@ public class ItemValidation {
                 }
             }
         } catch (DateTimeParseException e) {
-           e.printStackTrace();
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isValidDateTimeFormat(String date, DateTimeFormatter formatter) {
+        LocalDateTime ldt = null;
+
+        try {
+            ldt = LocalDateTime.parse(date, formatter);
+            String res = ldt.format(formatter);
+
+            if (!res.equals(date)) {
+                try {
+                    throw new FailedValidationException("Invalid format of date and time");
+                } catch (FailedValidationException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
             return false;
         }
         return true;

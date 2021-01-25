@@ -1,5 +1,5 @@
 package entities;
 
 public enum Gender {
-    FEMALE, MALE;
+    FEMALE, MALE, SOMETHING_ELSE;
 }

@@ -1,14 +1,10 @@
 package services;
 
-import entities.Customer;
 import entities.Item;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static entities.Customer.getCustomerList;
 import static entities.Item.getItemList;
 
 public class ItemService {
@@ -50,18 +46,18 @@ public class ItemService {
     }
 
     //  the most popular goods during a particular weekend (passed in as a param)
-    public List<Integer> getPurchasesBetween(LocalDate start, LocalDate end) {
-        List<Integer> idListOfPurchases = new ArrayList<>();
-        for (Customer cus : getCustomerList()) {
-            if (cus.getDateOfLastPurchase().equals(start) || cus.getDateOfLastPurchase().equals(end) ||
-                    (cus.getDateOfLastPurchase().isAfter(start) && cus.getDateOfLastPurchase().isBefore(start))) {
-                for (int id : cus.getLastPurchases()) {
-                    idListOfPurchases.add(id);
-                }
-            }
-        }
-        return idListOfPurchases;
-    }
+//    public List<Integer> getPurchasesBetween(LocalDate start, LocalDate end) {
+//        List<Integer> idListOfPurchases = new ArrayList<>();
+//        for (Customer cus : getCustomerList()) {
+//            if (cus.getDateOfLastPurchase().equals(start) || cus.getDateOfLastPurchase().equals(end) ||
+//                    (cus.getDateOfLastPurchase().isAfter(start) && cus.getDateOfLastPurchase().isBefore(start))) {
+//                for (int id : cus.getLastPurchases()) {
+//                    idListOfPurchases.add(id);
+//                }
+//            }
+//        }
+//        return idListOfPurchases;
+//    }
 
 
 }

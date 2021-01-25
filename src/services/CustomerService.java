@@ -18,14 +18,14 @@ public class CustomerService {
         return customerList;
     }
 
-    public List<Integer> getIdListOfPurchasesByGender(Gender gender) {
-        List<Integer> idListOfFemalePurchases = new ArrayList<>();
-        for (Customer cus : getListOfCustomersByGender(gender)) {
-            for (int id : cus.getLastPurchases()) {
-                idListOfFemalePurchases.add(id);
-            }
-        }
-        return idListOfFemalePurchases;
-    }
+//    public List<Integer> getIdListOfPurchasesByGender(Gender gender) {
+//        List<Integer> idListOfFemalePurchases = new ArrayList<>();
+//        for (Customer cus : getListOfCustomersByGender(gender)) {
+//            for (int id : cus.getLastPurchases()) {
+//                idListOfFemalePurchases.add(id);
+//            }
+//        }
+//        return idListOfFemalePurchases;
+//    }
 
 }
