@@ -1,5 +1,5 @@
 # OnlineStore
-Final project in Go2It bootcamp
+Final project of Module 2 in Go2It bootcamp
 
 Tasks:
 
