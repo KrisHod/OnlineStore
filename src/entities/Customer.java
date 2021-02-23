@@ -19,7 +19,6 @@ public class Customer {
         this.address = address;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
-   //     getCustomerList().add(this);
     }
 
     public Customer(String name, LocalDate doB, String address, Gender gender) {
@@ -27,7 +26,6 @@ public class Customer {
         this.doB = doB;
         this.address = address;
         this.gender = gender;
-  //      getCustomerList().add(this);
     }
 
     public String getName() {
