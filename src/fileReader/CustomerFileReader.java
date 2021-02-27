@@ -2,11 +2,7 @@ package fileReader;
 
 import entities.Customer;
 import entities.Gender;
-import entities.Item;
-import entities.Order;
 import exceptions.FailedValidationException;
-import services.CustomerService;
-import services.ItemService;
 import validation.Validator;
 
 import java.time.LocalDate;
@@ -16,9 +12,20 @@ import static utils.FileUtils.readFromFile;
 
 public class CustomerFileReader {
 
-    private List<Customer> customers = getAll(Constants.CUSTOMERS_PATH);
+    private List<Customer> customers;
 
-    public Map<String, List<Customer>> pathToCustomersList = Map.of(Constants.CUSTOMERS_PATH, customers);
+    public Map<String, List<Customer>> customersCache;
+
+    public CustomerFileReader() {
+        this.customersCache = new HashMap<>();
+        init();
+    }
+
+    private void init() {
+//        this.customers = getAll(Constants.CUSTOMERS_PATH);
+//        this.pathToCustomersList = Map.of(Constants.CUSTOMERS_PATH, customers);
+        getAll(Constants.CUSTOMERS_PATH);
+    }
 
     public List<Customer> getCustomers() {
         return customers;
@@ -29,6 +36,13 @@ public class CustomerFileReader {
     }
 
     public List<Customer> getAll(String path) {
+        if (customersCache.get(path) != null) {
+            return customersCache.get(path);
+        }
+//        if (customers != null) {
+//            return customers;
+//        }
+
         List<Customer> customers = new ArrayList<>();
         List<String> dataList = readFromFile(path);
         String customerName = null;
@@ -67,6 +81,9 @@ public class CustomerFileReader {
         } catch (FailedValidationException e) {
             e.printStackTrace();
         }
+
+//        this.customers = customers;
+        customersCache.put(path, customers);
         return customers;
     }
 
