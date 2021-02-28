@@ -10,6 +10,7 @@ import validation.Validator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +20,18 @@ public class OrderFileReader {
     CustomerService customerService = new CustomerService();
     ItemService itemService = new ItemService();
 
-    private List<Order> orders = getAll(Constants.CUSTOMERS_PATH);
+    private List<Order> orders;
 
-    public Map<String, List<Order>> pathToCustomersList = Map.of(Constants.CUSTOMERS_PATH, orders);
+    public Map<String, List<Order>> ordersCache;
+
+    public OrderFileReader (){
+        this.ordersCache = new HashMap<>();
+        init();
+    }
+
+    private void init (){
+        getAll(Constants.CUSTOMERS_PATH);
+    }
 
     public List<Order> getOrders() {
         return orders;
@@ -32,6 +42,10 @@ public class OrderFileReader {
     }
 
     public List<Order> getAll(String path) {
+        if (ordersCache.get(path) != null){
+            return ordersCache.get(path);
+        }
+
         List<Order> orders = new ArrayList<>();
         List<String> dataList = readFromFile(path);
 
@@ -62,6 +76,7 @@ public class OrderFileReader {
         } catch (FailedValidationException | NumberFormatException e) {
             e.printStackTrace();
         }
+        ordersCache.put(path, orders);
         return orders;
     }
 }
