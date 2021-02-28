@@ -6,15 +6,25 @@ import validation.Validator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static utils.FileUtils.readFromFile;
 
 public class ItemFileReader {
-    private List<Item> items = getAll(Constants.ITEMS_PATH);
+    private List<Item> items;
 
-    public Map<String, List<Item>> pathToCustomersList = Map.of(Constants.ITEMS_PATH, items);
+    public Map<String, List<Item>> itemsCache;
+
+    public ItemFileReader() {
+        this.itemsCache = new HashMap<>();
+        init();
+    }
+
+    private void init() {
+        getAll(Constants.ITEMS_PATH);
+    }
 
     public List<Item> getItems() {
         return items;
@@ -25,6 +35,10 @@ public class ItemFileReader {
     }
 
     public List<Item> getAll(String path) {
+        if (itemsCache.get(path) != null) {
+            return itemsCache.get(path);
+        }
+
         List<Item> items = new ArrayList<>();
         List<String> dataList = readFromFile(path);
         int id = 0;
@@ -66,6 +80,7 @@ public class ItemFileReader {
         } catch (FailedValidationException e) {
             e.printStackTrace();
         }
+        itemsCache.put(path, items);
         return items;
     }
 }
