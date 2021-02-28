@@ -22,8 +22,6 @@ public class CustomerFileReader {
     }
 
     private void init() {
-//        this.customers = getAll(Constants.CUSTOMERS_PATH);
-//        this.pathToCustomersList = Map.of(Constants.CUSTOMERS_PATH, customers);
         getAll(Constants.CUSTOMERS_PATH);
     }
 
@@ -39,9 +37,6 @@ public class CustomerFileReader {
         if (customersCache.get(path) != null) {
             return customersCache.get(path);
         }
-//        if (customers != null) {
-//            return customers;
-//        }
 
         List<Customer> customers = new ArrayList<>();
         List<String> dataList = readFromFile(path);
@@ -81,10 +76,7 @@ public class CustomerFileReader {
         } catch (FailedValidationException e) {
             e.printStackTrace();
         }
-
-//        this.customers = customers;
         customersCache.put(path, customers);
         return customers;
     }
-
 }
