@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class Validation {
+public class Validator {
 
     public static boolean isValidNumericDataInString(String num) throws FailedValidationException {
         // check if string contains only positive digitals
