@@ -3,10 +3,8 @@ package repository;
 import entities.Item;
 import utils.DBUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.time.LocalDateTime;
 
 public class ItemRepository {
     public void add(Item item) {
@@ -24,5 +22,30 @@ public class ItemRepository {
         } catch (SQLException ex) {
             System.out.println("Error " + ex.getMessage());
         }
+    }
+
+    private Item getItem(ResultSet rs) throws SQLException {
+        int id = rs.getInt("id");
+        String title = rs.getString("title");
+        int code = rs.getInt("code");
+        String producer = rs.getString("producer");
+        LocalDateTime dateOfLastUpdate = LocalDateTime.parse(rs.getString("dateOfLastUpdate"));
+
+        return new Item(id, title, code, producer, dateOfLastUpdate);
+    }
+
+    public Item getById(int id) {
+        Item item = null;
+        String sql = "SELECT * FROM item WHERE id=" + id;
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                item = getItem(rs);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error " + ex.getMessage());
+        }
+        return item;
     }
 }
