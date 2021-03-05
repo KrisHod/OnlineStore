@@ -1,25 +1,38 @@
 package repository;
 
+import entities.Customer;
 import entities.Item;
 import entities.Order;
 import utils.DBUtil;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderedItemsRepository {
-    ItemRepository itemRepository = new ItemRepository();
+    private ItemRepository itemRepository;
+    private CustomerRepository customerRepository;
+
+    public OrderedItemsRepository() {
+        init();
+    }
+
+    private void init() {
+        this.itemRepository = new ItemRepository();
+        this.customerRepository = new CustomerRepository();
+    }
 
     public void add(Order order) {
-        String sql = "INSERT INTO orderedItems (orderId, itemId) values(?, ?)";
+        String sql = "INSERT INTO orderedItems (date, orderId, itemId) values(?, ?, ?)";
 
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setInt(1, order.getId());
+            stmt.setTimestamp(1, Timestamp.valueOf(order.getDateOrder().atStartOfDay()));
+            stmt.setInt(2, order.getId());
 
-            for (Item i : order.getItemList()) {
-                stmt.setInt(2, i.getId());
+            for (Item item : order.getItemList()) {
+                stmt.setInt(3, item.getId());
                 stmt.addBatch();
             }
             stmt.executeBatch();
@@ -43,5 +56,31 @@ public class OrderedItemsRepository {
             System.out.println("Error " + ex.getMessage());
         }
         return items;
+    }
+
+    private Order getOrder(ResultSet rs) throws SQLException {
+        LocalDate dateOrder = rs.getDate("date").toLocalDate();
+        int orderId = rs.getInt("orderId");
+        int customerId = rs.getInt("customerId");
+        Customer customer = customerRepository.getById(customerId);
+        List<Item> items = getById(orderId);
+
+        return new Order(orderId, customer, items, dateOrder);
+    }
+
+    public List<Order> getAll() {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orderedItems ";
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                orders.add(getOrder(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error " + ex.getMessage());
+        }
+        return orders;
     }
 }
