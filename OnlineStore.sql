@@ -37,3 +37,9 @@ CREATE TABLE orderedItems
     FOREIGN KEY item_fk (itemId) REFERENCES item (id),
     PRIMARY KEY (id)
 );
+
+ALTER TABLE item
+    ADD COLUMN primaryItem TINYINT NOT NULL AFTER dateOfLastUpdate;
+
+ALTER TABLE item
+    ADD COLUMN candidateToRemove TINYINT NOT NULL AFTER primaryItem;
