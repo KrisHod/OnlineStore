@@ -24,13 +24,13 @@ public class OrderFileReader {
 
     public Map<String, List<Order>> ordersCache;
 
-    public OrderFileReader (){
+    public OrderFileReader() {
         this.ordersCache = new HashMap<>();
         init();
     }
 
-    private void init (){
-        getAll(Constants.CUSTOMERS_PATH);
+    private void init() {
+        getAll(Constants.CUSTOMERS_PATH, Constants.ITEMS_PATH);
     }
 
     public List<Order> getOrders() {
@@ -41,13 +41,13 @@ public class OrderFileReader {
         this.orders = orders;
     }
 
-    public List<Order> getAll(String path) {
-        if (ordersCache.get(path) != null){
-            return ordersCache.get(path);
+    public List<Order> getAll(String customerPath, String itemPath) {
+        if (ordersCache.get(customerPath) != null) {
+            return ordersCache.get(customerPath);
         }
 
         List<Order> orders = new ArrayList<>();
-        List<String> dataList = readFromFile(path);
+        List<String> dataList = readFromFile(customerPath);
 
         Customer customer;
         LocalDate dateOrder = null;
@@ -57,18 +57,17 @@ public class OrderFileReader {
                 List<Item> itemList = new ArrayList<>();
                 String[] array = dataList.get(i).split(";");
 
-                customer = customerService.getByName(array[0]);
+                customer = customerService.getByName(array[0], customerPath);
 
                 String[] lastPurchases = array[5].split(",");
                 for (String s : lastPurchases) {
-                    itemList.add(itemService.getById(Integer.parseInt(s)));
+                    itemList.add(itemService.getByIdFromFile(Integer.parseInt(s), itemPath));
                 }
 
                 //date of last purchase format validation
                 if (Validator.isValidDateFormat(array[6], Constants.DATE_OF_LAST_PURCHASE)) {
                     dateOrder = LocalDate.parse(array[6], Constants.DATE_OF_LAST_PURCHASE);
-                }
-                else if (Validator.isValidDateFormat(array[6], Constants.DATE_OF_LAST_PURCHASE2)) {
+                } else if (Validator.isValidDateFormat(array[6], Constants.DATE_OF_LAST_PURCHASE2)) {
                     dateOrder = LocalDate.parse(array[6], Constants.DATE_OF_LAST_PURCHASE2);
                 }
                 orders.add(new Order(customer, itemList, dateOrder));
@@ -76,7 +75,7 @@ public class OrderFileReader {
         } catch (FailedValidationException | NumberFormatException e) {
             e.printStackTrace();
         }
-        ordersCache.put(path, orders);
+        ordersCache.put(customerPath, orders);
         return orders;
     }
 }
