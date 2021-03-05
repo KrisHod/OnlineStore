@@ -5,6 +5,8 @@ import utils.DBUtil;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemRepository {
     public void add(Item item) {
@@ -47,5 +49,22 @@ public class ItemRepository {
             System.out.println("Error " + ex.getMessage());
         }
         return item;
+    }
+
+    public List<Item> getAll() {
+        List<Item> items = new ArrayList<>();
+        String sql = "SELECT * FROM item ";
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                items.add(getItem(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error " + ex.getMessage());
+        }
+        return items;
     }
 }
