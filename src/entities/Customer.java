@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class Customer {
+    private int id;
     private String name;
     private LocalDate doB;
     private String address;
     private Gender gender;
     private String phoneNumber;
-    private List <Order> orderList= new ArrayList<>();
+    private List<Order> orderList = new ArrayList<>();
 
     public Customer(String name, LocalDate doB, String address, Gender gender, String phoneNumber) {
         this.name = name;
@@ -21,11 +22,21 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
-    public Customer(String name, LocalDate doB, String address, Gender gender) {
+    public Customer(int id, String name, LocalDate doB, String address, Gender gender, String phoneNumber) {
+        this.id = id;
         this.name = name;
         this.doB = doB;
         this.address = address;
         this.gender = gender;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -79,25 +90,26 @@ public class Customer {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Customer)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(getName(), customer.getName()) && Objects.equals(getDoB(), customer.getDoB()) && Objects.equals(getAddress(), customer.getAddress())
-                && getGender() == customer.getGender() && Objects.equals(getPhoneNumber(), customer.getPhoneNumber()) && Objects.equals(getOrderList(), customer.getOrderList());
+        return id == customer.id && Objects.equals(name, customer.name) && Objects.equals(doB, customer.doB) && Objects.equals(address, customer.address) && gender == customer.gender && Objects.equals(phoneNumber, customer.phoneNumber) && Objects.equals(orderList, customer.orderList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDoB(), getAddress(), getGender(), getPhoneNumber(), getOrderList());
+        return Objects.hash(id, name, doB, address, gender, phoneNumber, orderList);
     }
 
     @Override
     public String toString() {
         return "Customer{" +
-                "name='" + name + '\'' +
-                ", DoB=" + doB +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", doB=" + doB +
                 ", address='" + address + '\'' +
                 ", gender=" + gender +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", orderList=" + orderList +
                 '}';
     }
 }
