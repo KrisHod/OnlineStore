@@ -1,49 +1,71 @@
 package services;
 
 import entities.Item;
-import exceptions.FailedValidationException;
+import entities.Order;
 import fileReader.ItemFileReader;
-import validation.Validator;
+import repository.ItemRepository;
+import utils.FileUtils;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 
 public class ItemService {
-    ItemFileReader itemFileReader = new ItemFileReader();
+    private ItemFileReader itemFileReader;
+    private ItemRepository itemRepository;
+    private OrderedItemsService orderedItemsService;
+    private FileUtils fileUtils;
 
-    public int getIdOfTheMostPopularGoods(List<Integer> idListOfPurchases) {
-        if (idListOfPurchases == null) {
-            return 0;
-        }
-        idListOfPurchases.sort(Comparator.naturalOrder());
-
-        int previous = idListOfPurchases.get(0);
-        int popular = idListOfPurchases.get(0);
-        int count = 1;
-        int maxCount = 1;
-
-        for (int i = 1; i < idListOfPurchases.size(); i++) {
-            if (idListOfPurchases.get(i) == previous)
-                count++;
-            else {
-                if (count > maxCount) {
-                    popular = idListOfPurchases.get(i - 1);
-                    maxCount = count;
-                }
-                previous = idListOfPurchases.get(i);
-                count = 1;
-            }
-        }
-
-        return count > maxCount ? idListOfPurchases.get(idListOfPurchases.size() - 1) : popular;
+    public ItemService() {
+        init();
     }
 
-    public Item getById(int id) {
-        for (Item item : itemFileReader.getItems()) {
+    private void init() {
+        this.itemFileReader = new ItemFileReader();
+        this.itemRepository = new ItemRepository();
+        this.orderedItemsService = new OrderedItemsService();
+        this.fileUtils = new FileUtils();
+    }
+
+    public void addAllToDB(List<Item> items) {
+        for (Item it : items) {
+            if (!isInDB(it)) {
+                itemRepository.add(it);
+            }
+        }
+    }
+
+    public boolean isInDB(Item item) {
+        return item.equals(itemRepository.getById(item.getId()));
+    }
+
+    public List<Item> getAll() {
+        return itemRepository.getAll();
+    }
+
+    public Item getByIdFromDB(int id) {
+        return itemRepository.getById(id);
+    }
+
+    // TODO verification if already update
+    public void updatePrimaryItem(Item item) {
+        itemRepository.updatePrimaryItem(item);
+    }
+
+    public void updateCandidateToRemove(Item item) {
+        itemRepository.updateCandidateToRemove(item);
+    }
+
+    public List<Item> getPrimaryItems() {
+        return itemRepository.getPrimaryItems();
+    }
+
+    public List<Item> getCandidatesToRemove() {
+        return itemRepository.getCandidatesToRemove();
+    }
+
+    public Item getByIdFromFile(int id, String path) {
+        for (Item item : itemFileReader.getAll(path)) {
             if (item.getId() == id) {
                 return item;
             }
@@ -51,19 +73,55 @@ public class ItemService {
         return null;
     }
 
-    //  the most popular goods during a particular weekend (passed in as a param)
-//    public List<Integer> getPurchasesBetween(LocalDate start, LocalDate end) {
-//        List<Integer> idListOfPurchases = new ArrayList<>();
-//        for (Customer cus : getCustomerList()) {
-//            if (cus.getDateOfLastPurchase().equals(start) || cus.getDateOfLastPurchase().equals(end) ||
-//                    (cus.getDateOfLastPurchase().isAfter(start) && cus.getDateOfLastPurchase().isBefore(start))) {
-//                for (int id : cus.getLastPurchases()) {
-//                    idListOfPurchases.add(id);
-//                }
-//            }
-//        }
-//        return idListOfPurchases;
-//    }
+    //     get list of items sold in particular period
+    public List<Item> getPurchasesBetween(LocalDate start, LocalDate end) {
+        List<Item> items = new ArrayList<>();
+        for (Order or : orderedItemsService.getAll()) {
+            if (or.getDateOrder().equals(start) || or.getDateOrder().equals(end) ||
+                    (or.getDateOrder().isAfter(start) && or.getDateOrder().isBefore(start))) {
+                items.addAll(orderedItemsService.getById(or.getId()));
+            }
+        }
+        return items;
+    }
 
+    //    sort items by number of sales
+    public static List<Item> getSortedListByPopularity(List<Item> items) {
+        Map<Integer, Item> salesCount = getCountOfOccurrences(items);
+        Map<Integer, Item> sortedMapByKey = new TreeMap<>(Collections.reverseOrder());
+        sortedMapByKey.putAll(salesCount);
+        return new ArrayList<>(sortedMapByKey.values());
+    }
 
+    //    count occurrences of items
+    public static Map<Integer, Item> getCountOfOccurrences(List<Item> items) {
+        Map<Integer, Item> salesCount = new LinkedHashMap<>();
+        for (Item it : items) {
+            salesCount.put(Collections.frequency(items, it), it);
+        }
+        return salesCount;
+    }
+
+    //    get three the most popular goods
+    public List<Item> getThreePopular(List<Item> items) {
+        List<Item> popItems = getSortedListByPopularity(items).subList(0, 3);
+        popItems.forEach(i -> updatePrimaryItem(i));
+        return popItems;
+    }
+
+    //    get three the least popular goods
+    public List<Item> getCandidatesToRemove(List<Item> items) {
+        List<Item> sortedByPopularity = getSortedListByPopularity(items);
+        List<Item> candidatesToRemove = sortedByPopularity.subList(sortedByPopularity.size() - 3, sortedByPopularity.size());
+        candidatesToRemove.forEach(i -> updateCandidateToRemove(i));
+        return candidatesToRemove;
+    }
+
+    public void writeToFilePrimaryItems() {
+        fileUtils.writeItems(getPrimaryItems(), "primaryItems.csv");
+    }
+
+    public void writeToFileCandidatesToRemove() {
+        fileUtils.writeItems(getCandidatesToRemove(), "candidateToRemove.csv");
+    }
 }
