@@ -39,6 +39,7 @@ public class ItemRepository {
     public Item getById(int id) {
         Item item = null;
         String sql = "SELECT * FROM item WHERE id=" + id;
+
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
@@ -59,12 +60,65 @@ public class ItemRepository {
              PreparedStatement stmt = con.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
                 items.add(getItem(rs));
             }
         } catch (SQLException ex) {
             System.out.println("Error " + ex.getMessage());
         }
         return items;
+    }
+
+    public void updatePrimaryItem(Item item) {
+        String sql = "UPDATE item SET primaryItem = ? WHERE id =" + item.getId();
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setBoolean(1, true);
+            stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Error " + ex.getMessage());
+        }
+    }
+
+    public void updateCandidateToRemove(Item item) {
+        String sql = "UPDATE item SET candidateToRemove = ? WHERE id =" + item.getId();
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setBoolean(1, true);
+            stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Error " + ex.getMessage());
+        }
+    }
+
+    public List<Item> getItemsByPopularity(String sql) {
+        List<Item> items = new ArrayList<>();
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setBoolean(1, true);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                items.add(getItem(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error " + ex.getMessage());
+        }
+        return items;
+    }
+
+    public List<Item> getPrimaryItems() {
+        String sql = "SELECT * FROM item WHERE primaryItem = ?";
+        return getItemsByPopularity(sql);
+    }
+
+    public List<Item> getCandidatesToRemove() {
+        String sql = "SELECT * FROM item WHERE candidateToRemove = ?";
+        return getItemsByPopularity(sql);
     }
 }
