@@ -1,7 +1,6 @@
 package entities;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +11,13 @@ public class Order {
     private LocalDate dateOrder;
 
     public Order(Customer customer, List<Item> itemList, LocalDate dateOrder) {
+        this.customer = customer;
+        this.itemList = itemList;
+        this.dateOrder = dateOrder;
+    }
+
+    public Order(int id, Customer customer, List<Item> itemList, LocalDate dateOrder) {
+        this.id = id;
         this.customer = customer;
         this.itemList = itemList;
         this.dateOrder = dateOrder;
