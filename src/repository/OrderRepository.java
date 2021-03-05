@@ -11,8 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderRepository {
-    CustomerRepository customerRepository = new CustomerRepository();
-    OrderedItemsRepository orderedItemsRepository = new OrderedItemsRepository();
+    private CustomerRepository customerRepository;
+    private OrderedItemsRepository orderedItemsRepository;
+
+    public OrderRepository() {
+        init();
+    }
+
+    private void init() {
+        this.customerRepository = new CustomerRepository();
+        this.orderedItemsRepository = new OrderedItemsRepository();
+    }
+
 
     public void add(Order order) {
         String sql = "INSERT INTO `order` (customerId, date) values(?, ?)";
@@ -53,19 +63,18 @@ public class OrderRepository {
     }
 
     public List<Order> getAll() {
-        List<Order> merchants = new ArrayList<>();
+        List<Order> orders = new ArrayList<>();
         String sql = "SELECT * FROM `order` ";
 
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
-                merchants.add(getOrder(rs));
+                orders.add(getOrder(rs));
             }
         } catch (SQLException ex) {
             System.out.println("Error " + ex.getMessage());
         }
-        return merchants;
+        return orders;
     }
 }
