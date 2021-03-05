@@ -43,8 +43,8 @@ public class OrderedItemsRepository {
 
     public List<Item> getById(int orderId) {
         List<Item> items = new ArrayList<>();
-
         String sql = "SELECT * FROM orderedItems WHERE id=" + orderId;
+
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
