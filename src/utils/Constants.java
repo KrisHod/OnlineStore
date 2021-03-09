@@ -1,4 +1,4 @@
-package fileReader;
+package utils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;

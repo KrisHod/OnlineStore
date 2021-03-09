@@ -16,9 +16,14 @@ public class Order {
         this.dateOrder = dateOrder;
     }
 
-    public Order(int id, Customer customer, List<Item> itemList, LocalDate dateOrder) {
+    public Order(int id, Customer customer, LocalDate dateOrder) {
         this.id = id;
         this.customer = customer;
+        this.dateOrder = dateOrder;
+    }
+
+    public Order(int id, List<Item> itemList, LocalDate dateOrder) {
+        this.id = id;
         this.itemList = itemList;
         this.dateOrder = dateOrder;
     }
