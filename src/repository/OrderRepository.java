@@ -1,7 +1,6 @@
 package repository;
 
 import entities.Customer;
-import entities.Item;
 import entities.Order;
 import utils.DBUtil;
 
@@ -12,7 +11,6 @@ import java.util.List;
 
 public class OrderRepository {
     private CustomerRepository customerRepository;
-    private OrderedItemsRepository orderedItemsRepository;
 
     public OrderRepository() {
         init();
@@ -20,9 +18,7 @@ public class OrderRepository {
 
     private void init() {
         this.customerRepository = new CustomerRepository();
-        this.orderedItemsRepository = new OrderedItemsRepository();
     }
-
 
     public void add(Order order) {
         String sql = "INSERT INTO `order` (customerId, date) values(?, ?)";
@@ -38,13 +34,12 @@ public class OrderRepository {
         }
     }
 
-    private Order getOrder(ResultSet rs) throws SQLException {
+    public Order getOrder(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         int customerId = rs.getInt("customerId");
         Customer customer = customerRepository.getById(customerId);
-        List<Item> items = orderedItemsRepository.getById(id);
         LocalDate dateOrder = rs.getDate("date").toLocalDate();
-        return new Order(id, customer, items, dateOrder);
+        return new Order(id, customer, dateOrder);
     }
 
     public Order getById(int id) {
