@@ -1,14 +1,16 @@
+package services;
+
 import entities.Gender;
 import services.ItemService;
 import services.OrderedItemsService;
 
 import java.time.LocalDate;
 
-public class Report {
+public class ReportService {
     private ItemService itemService;
     private OrderedItemsService orderedItemsService;
 
-    public Report() {
+    public ReportService() {
         init();
     }
 
