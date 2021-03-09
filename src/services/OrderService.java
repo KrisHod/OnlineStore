@@ -12,24 +12,18 @@ public class OrderService {
     private OrderRepository orderRepository = new OrderRepository();
     private CustomerService customerService = new CustomerService();
 
-    public OrderService (){
+    public OrderService() {
         init();
     }
 
-    private void init(){
+    private void init() {
         this.orderRepository = new OrderRepository();
         this.customerService = new CustomerService();
     }
 
-    public boolean isInDB(Order order) {
-        return order.equals(orderRepository.getById(order.getId()));
-    }
-
     public void addAllToDB(List<Order> orders) {
         for (Order or : orders) {
-            if (!isInDB(or)) {
-                orderRepository.add(or);
-            }
+            orderRepository.add(or);
         }
     }
 
