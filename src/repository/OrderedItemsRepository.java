@@ -1,6 +1,5 @@
 package repository;
 
-import entities.Customer;
 import entities.Item;
 import entities.Order;
 import utils.DBUtil;
@@ -12,7 +11,7 @@ import java.util.List;
 
 public class OrderedItemsRepository {
     private ItemRepository itemRepository;
-    private CustomerRepository customerRepository;
+    private OrderRepository orderRepository;
 
     public OrderedItemsRepository() {
         init();
@@ -20,7 +19,7 @@ public class OrderedItemsRepository {
 
     private void init() {
         this.itemRepository = new ItemRepository();
-        this.customerRepository = new CustomerRepository();
+        this.orderRepository = new OrderRepository();
     }
 
     public void add(Order order) {
@@ -28,22 +27,38 @@ public class OrderedItemsRepository {
 
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setTimestamp(1, Timestamp.valueOf(order.getDateOrder().atStartOfDay()));
-            stmt.setInt(2, order.getId());
+                for (Item item : order.getItemList()) {
 
-            for (Item item : order.getItemList()) {
+                stmt.setDate(1, Date.valueOf(order.getDateOrder()));
+                stmt.setInt(2, getByDate(order.getDateOrder()).getId());
                 stmt.setInt(3, item.getId());
                 stmt.addBatch();
             }
-            stmt.executeBatch();
+                stmt.executeBatch();
+
         } catch (SQLException ex) {
             System.out.println("Error " + ex.getMessage());
         }
     }
 
+    public Order getByDate(LocalDate localDate) {
+        Order order = null;
+        String sql = "SELECT * FROM `order` WHERE date='" + localDate + "'";
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                order = orderRepository.getOrder(rs);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error " + ex.getMessage());
+        }
+        return order;
+    }
+
     public List<Item> getById(int orderId) {
         List<Item> items = new ArrayList<>();
-        String sql = "SELECT * FROM orderedItems WHERE id=" + orderId;
+        String sql = "SELECT * FROM orderedItems WHERE orderId=" + orderId;
 
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -61,11 +76,9 @@ public class OrderedItemsRepository {
     private Order getOrder(ResultSet rs) throws SQLException {
         LocalDate dateOrder = rs.getDate("date").toLocalDate();
         int orderId = rs.getInt("orderId");
-        int customerId = rs.getInt("customerId");
-        Customer customer = customerRepository.getById(customerId);
         List<Item> items = getById(orderId);
 
-        return new Order(orderId, customer, items, dateOrder);
+        return new Order(orderId, items, dateOrder);
     }
 
     public List<Order> getAll() {
