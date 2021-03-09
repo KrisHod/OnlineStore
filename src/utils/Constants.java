@@ -12,7 +12,7 @@ public final class Constants {
     public static final String ITEMS_PATH = "C:\\Users\\Zver\\Desktop\\Kris\\Go2It\\OnlineStore\\src\\utils\\items.csv";
     public static final String CUSTOMERS_PATH = "C:\\Users\\Zver\\Desktop\\Kris\\Go2It\\OnlineStore\\src\\utils\\Customers.csv";
 
-    private Constants(){
+    private Constants() {
         //this prevents even the native class from
         //calling this constructor as well :
         throw new AssertionError();
