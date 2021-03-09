@@ -22,14 +22,8 @@ public class CustomerService {
 
     public void addAllToDB(List<Customer> customers) {
         for (Customer cus : customers) {
-            if (!isInDB(cus)) {
-                customerRepository.add(cus);
-            }
+            customerRepository.add(cus);
         }
-    }
-
-    public boolean isInDB(Customer customer) {
-        return customer.equals(customerRepository.getById(customer.getId()));
     }
 
     public Customer getByName(String name, String path) {
