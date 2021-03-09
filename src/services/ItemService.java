@@ -29,14 +29,8 @@ public class ItemService {
 
     public void addAllToDB(List<Item> items) {
         for (Item it : items) {
-            if (!isInDB(it)) {
-                itemRepository.add(it);
-            }
+            itemRepository.add(it);
         }
-    }
-
-    public boolean isInDB(Item item) {
-        return item.equals(itemRepository.getById(item.getId()));
     }
 
     public List<Item> getAll() {
@@ -86,18 +80,42 @@ public class ItemService {
     }
 
     //    sort items by number of sales
-    public static List<Item> getSortedListByPopularity(List<Item> items) {
-        Map<Integer, Item> salesCount = getCountOfOccurrences(items);
-        Map<Integer, Item> sortedMapByKey = new TreeMap<>(Collections.reverseOrder());
-        sortedMapByKey.putAll(salesCount);
-        return new ArrayList<>(sortedMapByKey.values());
+    public List<Item> getSortedListByPopularity(List<Item> items) {
+        Map<Item, Integer> salesCount = getCountOfOccurrences(items);
+        Map<Item, Integer> sortedMapByValue = sortByValues(salesCount);
+        return new ArrayList<>(sortedMapByValue.keySet());
+    }
+
+    public Map<Item, Integer> sortByValues(Map<Item, Integer> salesCount) {
+        List<Item> mapKeys = new ArrayList<>(salesCount.keySet());
+        List<Integer> mapValues = new ArrayList<>(salesCount.values());
+        Collections.sort(mapValues);
+
+        LinkedHashMap<Item, Integer> sortedMap =
+                new LinkedHashMap<>();
+
+        for (int val : mapValues) {
+            Iterator<Item> keyIt = mapKeys.iterator();
+
+            while (keyIt.hasNext()) {
+                Item key = keyIt.next();
+                int comp1 = salesCount.get(key);
+
+                if (comp1 == val) {
+                    keyIt.remove();
+                    sortedMap.put(key, val);
+                    break;
+                }
+            }
+        }
+        return sortedMap;
     }
 
     //    count occurrences of items
-    public static Map<Integer, Item> getCountOfOccurrences(List<Item> items) {
-        Map<Integer, Item> salesCount = new LinkedHashMap<>();
+    public Map<Item, Integer> getCountOfOccurrences(List<Item> items) {
+        Map<Item, Integer> salesCount = new HashMap<>();
         for (Item it : items) {
-            salesCount.put(Collections.frequency(items, it), it);
+            salesCount.put(it, Collections.frequency(items, it));
         }
         return salesCount;
     }
