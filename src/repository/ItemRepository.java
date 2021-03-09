@@ -31,7 +31,7 @@ public class ItemRepository {
         String title = rs.getString("title");
         int code = rs.getInt("code");
         String producer = rs.getString("producer");
-        LocalDateTime dateOfLastUpdate = LocalDateTime.parse(rs.getString("dateOfLastUpdate"));
+        LocalDateTime dateOfLastUpdate = rs.getTimestamp("dateOfLastUpdate").toLocalDateTime();
 
         return new Item(id, title, code, producer, dateOfLastUpdate);
     }
