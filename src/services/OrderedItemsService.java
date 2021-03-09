@@ -23,14 +23,8 @@ public class OrderedItemsService {
 
     public void addAllToDB(List<Order> orders) {
         for (Order or : orders) {
-            if (!isInDB(or)) {
-                orderedItemsRepository.add(or);
-            }
+            orderedItemsRepository.add(or);
         }
-    }
-
-    public boolean isInDB(Order order) {
-        return order.equals(orderedItemsRepository.getById(order.getId()));
     }
 
     public List<Item> getById(int orderId) {
@@ -41,12 +35,20 @@ public class OrderedItemsService {
         return orderedItemsRepository.getAll();
     }
 
+    public List<Integer> getListOfOrdersId(List<Order> orders) {
+        List<Integer> ids = new ArrayList<>();
+        for (Order or : orders) {
+            ids.add(or.getId());
+        }
+        return ids;
+    }
+
     public List<Item> getByGender(Gender gender) {
         List<Item> sortedItems = new ArrayList<>();
         List<Order> sortedOrders = orderService.getByGender(gender);
 
-        for (Order or : sortedOrders) {
-            sortedItems.addAll(getById(or.getId()));
+        for (Integer i : getListOfOrdersId(sortedOrders)) {
+            sortedItems.addAll(getById(i));
         }
         return sortedItems;
     }
