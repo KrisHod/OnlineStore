@@ -20,7 +20,7 @@ public class CustomerService {
         this.customerRepository = new CustomerRepository();
     }
 
-    public void addAllToDB(List<Customer> customers) {
+    public void save(List<Customer> customers) {
         for (Customer cus : customers) {
             customerRepository.add(cus);
         }
