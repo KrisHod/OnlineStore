@@ -4,7 +4,6 @@ import entities.Item;
 import entities.Order;
 import fileReader.ItemFileReader;
 import repository.ItemRepository;
-import utils.FileUtils;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -14,7 +13,6 @@ public class ItemService {
     private ItemFileReader itemFileReader;
     private ItemRepository itemRepository;
     private OrderedItemsService orderedItemsService;
-    private FileUtils fileUtils;
 
     public ItemService() {
         init();
@@ -24,7 +22,6 @@ public class ItemService {
         this.itemFileReader = new ItemFileReader();
         this.itemRepository = new ItemRepository();
         this.orderedItemsService = new OrderedItemsService();
-        this.fileUtils = new FileUtils();
     }
 
     public void save(List<Item> items) {
@@ -120,26 +117,4 @@ public class ItemService {
         return salesCount;
     }
 
-    //    get three the most popular goods
-    public List<Item> getThreePopular(List<Item> items) {
-        List<Item> popItems = getSortedListByPopularity(items).subList(0, 3);
-        popItems.forEach(i -> updatePrimaryItem(i));
-        return popItems;
-    }
-
-    //    get three the least popular goods
-    public List<Item> getCandidatesToRemove(List<Item> items) {
-        List<Item> sortedByPopularity = getSortedListByPopularity(items);
-        List<Item> candidatesToRemove = sortedByPopularity.subList(sortedByPopularity.size() - 3, sortedByPopularity.size());
-        candidatesToRemove.forEach(i -> updateCandidateToRemove(i));
-        return candidatesToRemove;
-    }
-
-    public void writeToFilePrimaryItems() {
-        fileUtils.writeItems(getPrimaryItems(), "primaryItems.csv");
-    }
-
-    public void writeToFileCandidatesToRemove() {
-        fileUtils.writeItems(getCandidatesToRemove(), "candidateToRemove.csv");
-    }
 }
