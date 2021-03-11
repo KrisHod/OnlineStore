@@ -21,7 +21,7 @@ public class OrderService {
         this.customerService = new CustomerService();
     }
 
-    public void addAllToDB(List<Order> orders) {
+    public void save(List<Order> orders) {
         for (Order or : orders) {
             orderRepository.add(or);
         }
