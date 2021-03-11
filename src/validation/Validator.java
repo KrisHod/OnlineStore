@@ -70,10 +70,13 @@ public class Validator {
     }
 
     public static boolean isValidPhoneNumber(String number) throws FailedValidationException {
-        if (number.matches("^((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$")) {
-            return true;
-        } else {
-            throw new FailedValidationException("Invalid telephone number");
+        if (!number.isEmpty()) {
+            if (number.matches("^((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$")) {
+                return true;
+            } else {
+                throw new FailedValidationException("Invalid telephone number");
+            }
         }
+        return false;
     }
 }
