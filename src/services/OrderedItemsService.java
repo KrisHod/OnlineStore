@@ -21,7 +21,7 @@ public class OrderedItemsService {
         this.orderService = new OrderService();
     }
 
-    public void addAllToDB(List<Order> orders) {
+    public void save(List<Order> orders) {
         for (Order or : orders) {
             orderedItemsRepository.add(or);
         }
