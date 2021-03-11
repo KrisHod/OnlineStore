@@ -27,7 +27,7 @@ public class ItemService {
         this.fileUtils = new FileUtils();
     }
 
-    public void addAllToDB(List<Item> items) {
+    public void save(List<Item> items) {
         for (Item it : items) {
             itemRepository.add(it);
         }
@@ -86,7 +86,7 @@ public class ItemService {
         return new ArrayList<>(sortedMapByValue.keySet());
     }
 
-    public Map<Item, Integer> sortByValues(Map<Item, Integer> salesCount) {
+    private Map<Item, Integer> sortByValues(Map<Item, Integer> salesCount) {
         List<Item> mapKeys = new ArrayList<>(salesCount.keySet());
         List<Integer> mapValues = new ArrayList<>(salesCount.values());
         Collections.sort(mapValues);
