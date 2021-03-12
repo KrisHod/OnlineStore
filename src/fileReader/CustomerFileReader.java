@@ -15,7 +15,7 @@ public class CustomerFileReader {
 
     private List<Customer> customers;
 
-    public Map<String, List<Customer>> customersCache;
+    private Map<String, List<Customer>> customersCache;
 
     public CustomerFileReader() {
         this.customersCache = new HashMap<>();
@@ -34,6 +34,7 @@ public class CustomerFileReader {
         this.customers = customers;
     }
 
+
     public List<Customer> getAll(String path) {
         if (customersCache.get(path) != null) {
             return customersCache.get(path);
@@ -45,8 +46,9 @@ public class CustomerFileReader {
         LocalDate doB = null;
         Gender gender = null;
         String phoneNumber = null;
-        try {
-            for (int i = 1; i < dataList.size(); i++) {
+
+        for (int i = 1; i < dataList.size(); i++) {
+            try {
                 String[] array = dataList.get(i).split(";");
 
                 //name validation
@@ -55,8 +57,8 @@ public class CustomerFileReader {
                 }
 
                 //date of birth format validation
-                if (Validator.isValidDateFormat(array[1], Constants.CUSTOMER_DOB)) {
-                    doB = LocalDate.parse(array[1], Constants.CUSTOMER_DOB);
+                if (Validator.isValidDateFormat(array[1], Constants.CUSTOMER_DOB_FORMAT)) {
+                    doB = LocalDate.parse(array[1], Constants.CUSTOMER_DOB_FORMAT);
                 }
 
                 //TODO address validation
@@ -66,16 +68,16 @@ public class CustomerFileReader {
                 if (Validator.isValidGender(array[3].toUpperCase(Locale.ROOT))) {
                     gender = Gender.valueOf(array[3].toUpperCase(Locale.ROOT));
                 }
-                if (!array[4].isEmpty()) {
-                    //phone number validation
-                    if (Validator.isValidPhoneNumber(array[4])) {
-                        phoneNumber = array[4];
-                    }
+
+                //phone number validation
+                if (Validator.isValidPhoneNumber(array[4])) {
+                    phoneNumber = array[4];
                 }
+
                 customers.add(new Customer(customerName, doB, address, gender, phoneNumber));
+            } catch (FailedValidationException e) {
+                e.printStackTrace();
             }
-        } catch (FailedValidationException e) {
-            e.printStackTrace();
         }
         customersCache.put(path, customers);
         return customers;
