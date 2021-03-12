@@ -23,7 +23,7 @@ public class OrderFileReader {
 
     private List<Order> orders;
 
-    public Map<String, List<Order>> ordersCache;
+    private Map<String, List<Order>> ordersCache;
 
     public OrderFileReader() {
         this.ordersCache = new HashMap<>();
@@ -53,8 +53,8 @@ public class OrderFileReader {
         Customer customer;
         LocalDate dateOrder = null;
 
-        try {
-            for (int i = 1; i < dataList.size(); i++) {
+        for (int i = 1; i < dataList.size(); i++) {
+            try {
                 List<Item> itemList = new ArrayList<>();
                 String[] array = dataList.get(i).split(";");
 
@@ -66,15 +66,16 @@ public class OrderFileReader {
                 }
 
                 //date of last purchase format validation
-                if (Validator.isValidDateFormat(array[6], Constants.DATE_OF_LAST_PURCHASE)) {
-                    dateOrder = LocalDate.parse(array[6], Constants.DATE_OF_LAST_PURCHASE);
-                } else if (Validator.isValidDateFormat(array[6], Constants.DATE_OF_LAST_PURCHASE2)) {
-                    dateOrder = LocalDate.parse(array[6], Constants.DATE_OF_LAST_PURCHASE2);
+                if (Validator.isValidDateFormat(array[6], Constants.DATE_OF_LAST_PURCHASE_FORMAT)) {
+                    dateOrder = LocalDate.parse(array[6], Constants.DATE_OF_LAST_PURCHASE_FORMAT);
+                } else if (Validator.isValidDateFormat(array[6], Constants.DATE_OF_LAST_PURCHASE2_FORMAT)) {
+                    dateOrder = LocalDate.parse(array[6], Constants.DATE_OF_LAST_PURCHASE2_FORMAT);
                 }
                 orders.add(new Order(customer, itemList, dateOrder));
+
+            } catch (FailedValidationException | NumberFormatException e) {
+                e.printStackTrace();
             }
-        } catch (FailedValidationException | NumberFormatException e) {
-            e.printStackTrace();
         }
         ordersCache.put(customerPath, orders);
         return orders;
