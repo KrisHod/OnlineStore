@@ -16,7 +16,7 @@ import static utils.FileUtils.readFromFile;
 public class ItemFileReader {
     private List<Item> items;
 
-    public Map<String, List<Item>> itemsCache;
+    private Map<String, List<Item>> itemsCache;
 
     public ItemFileReader() {
         this.itemsCache = new HashMap<>();
@@ -48,8 +48,8 @@ public class ItemFileReader {
         String producer = null;
         LocalDateTime dateOfLastUpdate = null;
 
-        try {
-            for (int i = 1; i < dataList.size(); i++) {
+        for (int i = 1; i < dataList.size(); i++) {
+            try {
                 String[] array = dataList.get(i).split(";");
 
                 //id validation
@@ -73,13 +73,13 @@ public class ItemFileReader {
                 }
 
                 //date and time format validation
-                if (Validator.isValidDateTimeFormat(array[4], Constants.DATE_OF_LAST_UPDATE)) {
-                    dateOfLastUpdate = LocalDateTime.parse(array[4], Constants.DATE_OF_LAST_UPDATE);
+                if (Validator.isValidDateTimeFormat(array[4], Constants.DATE_OF_LAST_UPDATE_FORMAT)) {
+                    dateOfLastUpdate = LocalDateTime.parse(array[4], Constants.DATE_OF_LAST_UPDATE_FORMAT);
                 }
                 items.add(new Item(id, title, code, producer, dateOfLastUpdate));
+            } catch (FailedValidationException e) {
+                e.printStackTrace();
             }
-        } catch (FailedValidationException e) {
-            e.printStackTrace();
         }
         itemsCache.put(path, items);
         return items;
