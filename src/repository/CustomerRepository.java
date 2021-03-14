@@ -30,9 +30,10 @@ public class CustomerRepository {
 
     public Integer getId(Customer customer) {
         int id = 0;
-        String sql = "SELECT id FROM customer WHERE name='" + customer.getName() + "'";
+        String sql = "SELECT id FROM customer WHERE name=?";
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, customer.getName());
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 id = rs.getInt("id");
@@ -56,9 +57,10 @@ public class CustomerRepository {
 
     public Customer getById(int id) {
         Customer customer = null;
-        String sql = "SELECT * FROM customer WHERE id=" + id;
+        String sql = "SELECT * FROM customer WHERE id=?";
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 customer = getCustomer(rs);
@@ -71,9 +73,10 @@ public class CustomerRepository {
 
     public List<Customer> getByGender(Gender gender) {
         List<Customer> customers = new ArrayList<>();
-        String sql = "SELECT * FROM customer WHERE gender='" + gender.toString() + "'";
+        String sql = "SELECT * FROM customer WHERE gender=?";
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, gender.toString());
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 customers.add(getCustomer(rs));
