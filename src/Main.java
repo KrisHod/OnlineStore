@@ -1,9 +1,12 @@
 import fileReader.CustomerFileReader;
 import fileReader.ItemFileReader;
 import fileReader.OrderFileReader;
+import repository.CustomerRepository;
 import services.*;
+import utils.Constants;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,15 +25,14 @@ public class Main {
         reportService.showCandidateToRemove();
 
           //  Persist all the data in DB
-//        customerService.addAllToDB(customerFileReader.getAll(Constants.CUSTOMERS_PATH));
-//        itemService.addAllToDB(itemFileReader.getAll(Constants.ITEMS_PATH));
-//        orderService.addAllToDB(orderFileReader.getAll(Constants.CUSTOMERS_PATH, Constants.ITEMS_PATH));
-//        orderedItemsService.addAllToDB(orderFileReader.getAll(Constants.CUSTOMERS_PATH, Constants.ITEMS_PATH));
+//        customerService.save(customerFileReader.getAll(Constants.CUSTOMERS_PATH));
+//        itemService.save(itemFileReader.getAll(Constants.ITEMS_PATH));
+//        orderService.save(orderFileReader.getAll(Constants.CUSTOMERS_PATH, Constants.ITEMS_PATH));
+//        orderedItemsService.save(orderFileReader.getAll(Constants.CUSTOMERS_PATH, Constants.ITEMS_PATH));
 
 
         // Write primary items and Candidate to remove to file
-        itemService.writeToFilePrimaryItems();
-        itemService.writeToFileCandidatesToRemove();
-
+        reportService.writeToFilePrimaryItems();
+        reportService.writeToFileCandidatesToRemove();
     }
 }
