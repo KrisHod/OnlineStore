@@ -38,10 +38,11 @@ public class ItemRepository {
 
     public Item getById(int id) {
         Item item = null;
-        String sql = "SELECT * FROM item WHERE id=" + id;
+        String sql = "SELECT * FROM item WHERE id=?";
 
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 item = getItem(rs);
