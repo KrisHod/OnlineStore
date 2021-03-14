@@ -43,9 +43,10 @@ public class OrderedItemsRepository {
 
     public Order getByDate(LocalDate localDate) {
         Order order = null;
-        String sql = "SELECT * FROM `order` WHERE date='" + localDate + "'";
+        String sql = "SELECT * FROM `order` WHERE date=?";
         try (Connection con = DBUtil.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setDate(1, Date.valueOf(localDate));
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 order = orderRepository.getOrder(rs);
