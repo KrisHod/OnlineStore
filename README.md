@@ -1,26 +1,14 @@
-# OnlineStore
-Final project of Module 2 in Go2It bootcamp
+# Online store
 
-Tasks:
+This project is designed to perform basic CRUD operations for online store database using JDBC.   
+ 
+## Overview
+* Two csv files provided with information from client's CRM: items.csv and customer.csv.
+* Data about customer, item and order is retrieved and stored in SQL database using JDBC connector.
+* Architecture is built on Inversion of Control principles by implementing Repository-Service Pattern.
+* Reports can be saved as csv files:  
+   :white_check_mark: Most popular items.  
+   :white_check_mark: Least popular items.  
+   :white_check_mark: Items popular among certain gender.  
+   :white_check_mark: Items popular during specific time interval.  
 
-1.	Read files and created a collection of Java objects based on that data
-
-2.	Persist all the data in DB (DB should be created based on entities in csv files)
-
-3.	Create reports from Java:
-
-     a.	what goods are the most popular among women
-
-     b.	the most popular goods during a particular weekend (passed in as a param)
-
-4.	Alter the DB using plain SQL:
-
-     a.	create new columns: PrimaryItem, CandidateToRemove
-
-     b.	fetch three the most and least popular goods and mark them correspondingly in the table
-
-5.	Write all the marked goods (see the bullet point above) in two different files: 
--	primaryItems.csv with the most popular goods; 
--	candidateToRemove.csv - the least popular good. 
-
-All the data should be in csv format with ; used as a delimeter
